@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import GlobalStyle from "../src/styles/globalStyle";
 import { ScrollerProvider } from "./utils/ScrollerContext";
 import isTouchDevice from "../src/utils/isTouchDevice";
@@ -9,7 +9,7 @@ import TestComponent from "./TestComponent";
 
 function App() {
   const [scroller, setScroller] = useState(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     //init smooth scroll
     if (!isTouchDevice()) {
       let triggers = ScrollTrigger.getAll();
