@@ -6,7 +6,7 @@ function InitSmoothScroll(smoothness) {
   // this is the helper function that sets it all up. Pass in the content <div> and then the wrapping viewport <div> (can be the elements or selector text)
   function smoothScroll(content, viewport, smoothness) {
     content = gsap.utils.toArray(content)[0];
-
+    console.log("initing");
     gsap.set(viewport || content.parentNode, {
       overflow: "hidden",
       position: "fixed",
@@ -57,8 +57,10 @@ function InitSmoothScroll(smoothness) {
         onUpdate: ScrollTrigger.update,
         scrollTrigger: {
           scroller: window,
+          invalidateOnRefresh: true,
           start: 0,
-          markers: true,
+          refreshPriority: -1,
+          id: "scroller",
           end: () => height - document.documentElement.clientHeight,
           scrub: smoothness || 1,
           onRefresh: (self) => {

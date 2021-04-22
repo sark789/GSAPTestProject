@@ -1,30 +1,41 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useScroller } from "./utils/ScrollerContext";
-import { Wrapper1, Wrapper2 } from "./TestComponentElements";
+import {
+  InnerWrapper,
+  OutterWrapper,
+  Wrapper1,
+  Wrapper2,
+} from "./TestComponentElements";
 gsap.registerPlugin(ScrollTrigger);
 const TestComponent = () => {
-  const containerRef = useRef();
-
+  const itemRef = useRef();
+  const outterContainerRef = useRef();
   const scrollerInstance = useScroller();
+
   useEffect(() => {
     if (scrollerInstance) {
-      gsap.fromTo(
-        ".something",
-        { y: 0 },
+      var tl = gsap.timeline({
+        scrollTrigger: {
+          scroller: "#content",
+          trigger: itemRef.current,
+          start: () => `top+=${outterContainerRef.current.offsetHeight} bottom`,
+          end: () => `+=${outterContainerRef.current.offsetHeight}`,
+          scrub: true,
+          invalidateOnRefresh: true,
+          id: "footer-fade-in",
+          markers: true,
+        },
+      });
+
+      tl.fromTo(
+        itemRef.current,
         {
-          scrollTrigger: {
-            invalidateOnRefresh: true,
-            trigger: ".something",
-            start: "top top",
-            pin: true,
-            pinSpacing: false,
-            scroller: "#content",
-            id: "pin-landing-pic",
-            markers: true,
-            refreshPriority: 1,
-          },
+          y: () => -outterContainerRef.current.offsetHeight,
+        },
+        {
+          y: 0,
         }
       );
     }
@@ -32,8 +43,13 @@ const TestComponent = () => {
 
   return (
     <>
-      <Wrapper1 className="something">Some title</Wrapper1>
-      <Wrapper2></Wrapper2>
+      <Wrapper1></Wrapper1>
+      <Wrapper2 ref={outterContainerRef} style={{ overflow: "hidden" }}>
+        <OutterWrapper ref={itemRef}>
+          <InnerWrapper>Neki Neki</InnerWrapper>
+          <InnerWrapper>Neki Neki</InnerWrapper>
+        </OutterWrapper>
+      </Wrapper2>
     </>
   );
 };
